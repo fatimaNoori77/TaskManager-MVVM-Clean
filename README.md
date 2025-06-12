@@ -65,4 +65,4 @@ This app is built using:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/CleanTaskManager.git
+   git clone https://github.com/fatimaNoori77/TaskManager-MVVM-Clean

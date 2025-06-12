@@ -45,4 +45,33 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Hilt core
+    implementation(libs.hilt.android)
+    annotationProcessor(libs.hilt.android.compiler)
+    implementation(libs.javapoet)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    // Lifecycle ViewModel + LiveData
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.livedata.ktx)
+
+    // Room
+    implementation(libs.androidx.room.runtime.v271)
+    annotationProcessor(libs.androidx.room.compiler.v271)
+
+    // Data store
+    implementation(libs.datastore.preferences)
+    implementation(libs.kotlinx.coroutines.android)
+
+    // Work manager
+    implementation(libs.work.runtime.ktx)
+
+
+    implementation(libs.lottie)
 }
