@@ -1,9 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.TaskManager" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Colors -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorOnSecondary">@color/color_on_secondary</item>
+<!--        <item name="colorBack">@color/color_background</item>-->
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
     </style>
 
-    <style name="Theme.TaskManager" parent="Base.Theme.TaskManager" />
+    <style name="Theme.TaskManager" parent="Base.Theme.TaskManager"/>
 </resources>

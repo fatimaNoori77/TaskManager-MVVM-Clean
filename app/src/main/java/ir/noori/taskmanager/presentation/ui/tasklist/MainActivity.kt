@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +43,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        viewModel.isDarkMode.observe(this) { isDark ->
+            AppCompatDelegate.setDefaultNightMode(
+                if (isDark) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
+
+        binding.actionBar.btnRefresh.setOnClickListener{
+            viewModel.refreshTasks()
+        }
+
+        binding.actionBar.btnToggleTheme.setOnClickListener{
+            viewModel.isDarkMode.value?.let { current ->
+                viewModel.toggleTheme(current)
+            }
+        }
 
         setupRecyclerView()
         observeTasks()

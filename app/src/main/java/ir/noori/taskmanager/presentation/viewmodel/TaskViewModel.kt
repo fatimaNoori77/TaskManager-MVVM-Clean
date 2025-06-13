@@ -1,9 +1,12 @@
 package ir.noori.taskmanager.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.noori.taskmanager.data.local.DataStore
 import ir.noori.taskmanager.domain.model.Task
+import ir.noori.taskmanager.domain.repository.TaskRepository
 import ir.noori.taskmanager.domain.usecase.AddTaskUseCase
 import ir.noori.taskmanager.domain.usecase.DeleteTaskUseCase
 import ir.noori.taskmanager.domain.usecase.GetTasksUseCase
@@ -19,7 +22,9 @@ class TaskViewModel @Inject constructor(
     private val getTasksUseCase: GetTasksUseCase,
     private val deleteTaskUseCase: DeleteTaskUseCase,
     private val toggleTaskStatusUseCase: ToggleTaskStatusUseCase,
-    private val addTaskUseCase: AddTaskUseCase
+    private val addTaskUseCase: AddTaskUseCase,
+    private val themePreferences: DataStore,
+    private val repository: TaskRepository
 ) : ViewModel() {
 
     val tasks: StateFlow<List<Task>> = getTasksUseCase.invoke().stateIn(viewModelScope, SharingStarted.WhileSubscribed(2000), emptyList())
@@ -39,6 +44,20 @@ class TaskViewModel @Inject constructor(
     fun deleteTask(taskId: Int) {
         viewModelScope.launch {
             deleteTaskUseCase(taskId)
+        }
+    }
+
+    val isDarkMode = themePreferences.isDarkMode.asLiveData()
+
+    fun refreshTasks() {
+        viewModelScope.launch {
+//            repository.fetchRemoteTasks()
+        }
+    }
+
+    fun toggleTheme(currentTheme: Boolean) {
+        viewModelScope.launch {
+            themePreferences.toggleTheme(currentTheme)
         }
     }
 }
