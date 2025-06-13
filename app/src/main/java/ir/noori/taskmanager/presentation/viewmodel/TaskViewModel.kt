@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.noori.taskmanager.domain.model.Task
+import ir.noori.taskmanager.domain.usecase.AddTaskUseCase
 import ir.noori.taskmanager.domain.usecase.DeleteTaskUseCase
 import ir.noori.taskmanager.domain.usecase.GetTasksUseCase
 import ir.noori.taskmanager.domain.usecase.ToggleTaskStatusUseCase
@@ -17,10 +18,18 @@ import javax.inject.Inject
 class TaskViewModel @Inject constructor(
     private val getTasksUseCase: GetTasksUseCase,
     private val deleteTaskUseCase: DeleteTaskUseCase,
-    private val toggleTaskStatusUseCase: ToggleTaskStatusUseCase
+    private val toggleTaskStatusUseCase: ToggleTaskStatusUseCase,
+    private val addTaskUseCase: AddTaskUseCase
 ) : ViewModel() {
 
     val tasks: StateFlow<List<Task>> = getTasksUseCase.invoke().stateIn(viewModelScope, SharingStarted.WhileSubscribed(2000), emptyList())
+
+
+    fun addTask(task: Task) {
+        viewModelScope.launch {
+            addTaskUseCase(task)
+        }
+    }
 
     fun toggleTaskDone(task: Task) {
         viewModelScope.launch {

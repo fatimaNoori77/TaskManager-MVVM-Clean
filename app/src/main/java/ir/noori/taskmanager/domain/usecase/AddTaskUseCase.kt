@@ -1,4 +1,13 @@
 package ir.noori.taskmanager.domain.usecase
 
-class AddTaskUseCase {
+import ir.noori.taskmanager.domain.model.Task
+import ir.noori.taskmanager.domain.repository.TaskRepository
+import javax.inject.Inject
+
+class AddTaskUseCase @Inject constructor(
+    private val repository: TaskRepository
+) {
+    suspend operator fun invoke(task: Task) {
+        repository.insertTask(task)
+    }
 }
