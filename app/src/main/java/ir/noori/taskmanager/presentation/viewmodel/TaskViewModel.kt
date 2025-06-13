@@ -24,7 +24,6 @@ class TaskViewModel @Inject constructor(
 
     val tasks: StateFlow<List<Task>> = getTasksUseCase.invoke().stateIn(viewModelScope, SharingStarted.WhileSubscribed(2000), emptyList())
 
-
     fun addTask(task: Task) {
         viewModelScope.launch {
             addTaskUseCase(task)

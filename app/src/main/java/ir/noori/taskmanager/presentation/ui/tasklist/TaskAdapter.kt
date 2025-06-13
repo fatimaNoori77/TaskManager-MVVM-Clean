@@ -1,5 +1,6 @@
 package ir.noori.taskmanager.presentation.ui.tasklist
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.buildSpannedString
@@ -21,18 +22,24 @@ class TaskAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(task: Task) = with(binding) {
-            textTaskTitle.text = task.title
-            textTaskDueDate.text = buildSpannedString {
+            txtTaskTitle.text = task.title
+            txtDueDate.text = buildSpannedString {
                 append("Due: ")
                 append(SimpleDateFormat("MMM dd", Locale.getDefault()).format(Date(task.dueDate)))
             }
             checkBoxDone.isChecked = task.isDone
 
+            txtTaskTitle.paintFlags = if (task.isDone) {
+                txtTaskTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                txtTaskTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            }
+
             checkBoxDone.setOnCheckedChangeListener { _, isChecked ->
                 onCheckChanged(task, isChecked)
             }
 
-            buttonDelete.setOnClickListener {
+            btnDelete.setOnClickListener {
                 onDeleteClicked(task)
             }
         }

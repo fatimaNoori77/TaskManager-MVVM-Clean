@@ -26,7 +26,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/text_task_title"
+                android:id="@+id/txtTaskTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Buy milk"
@@ -34,7 +34,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/text_task_due_date"
+                android:id="@+id/txtDueDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Due: June 13"
@@ -43,7 +43,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/button_delete"
+            android:id="@+id/btnDelete"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="?attr/selectableItemBackgroundBorderless"
