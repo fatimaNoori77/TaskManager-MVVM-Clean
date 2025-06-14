@@ -2,6 +2,7 @@ package ir.noori.taskmanager.presentation.ui.tasklist
 
 import android.graphics.Paint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.buildSpannedString
 import androidx.recyclerview.widget.DiffUtil
@@ -24,11 +25,17 @@ class TaskAdapter(
 
         fun bind(task: Task) = with(binding) {
             txtTaskTitle.text = task.title
+            if(task.description?.isEmpty() == true){
+                txtTaskDescription.visibility = View.GONE
+            }else{
+                txtTaskDescription.visibility = View.VISIBLE
+                txtTaskDescription.text = task.description
+            }
             txtDueDate.text = buildSpannedString {
                 append("Due: ")
                 append(SimpleDateFormat("MMM dd", Locale.getDefault()).format(Date(task.dueDate)))
             }
-            checkBoxDone.isChecked = task.isDone
+            chbDoneTask.isChecked = task.isDone
 
             txtTaskTitle.paintFlags = if (task.isDone) {
                 txtTaskTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -36,7 +43,7 @@ class TaskAdapter(
                 txtTaskTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
 
-            checkBoxDone.setOnCheckedChangeListener { _, isChecked ->
+            chbDoneTask.setOnCheckedChangeListener { _, isChecked ->
                 onCheckChanged(task, isChecked)
             }
 
