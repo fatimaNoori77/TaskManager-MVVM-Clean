@@ -4,29 +4,44 @@ import ir.noori.taskmanager.data.model.TaskDto
 import ir.noori.taskmanager.data.model.TaskEntity
 import ir.noori.taskmanager.domain.model.Task
 
-fun TaskEntity.toDomain(): Task = Task(
-    id = id,
-    title = title,
-    description = description,
-    isDone = isDone,
-    dueDate = dueDate,
-    reminderTime = reminderTime
-)
+fun TaskEntity.toDomain(): Task {
+    return Task(
+        id = id,
+        title = title,
+        description = description,
+        isDone = isDone,
+        dueDate = dueDate,
+        reminderTime = reminderTime
+    )
+}
 
-fun Task.toEntity(): TaskEntity = TaskEntity(
-    id = id,
-    title = title,
-    description = description.toString(),
-    isDone = isDone,
-    dueDate = dueDate,
-    reminderTime = reminderTime ?: 0
-)
+fun Task.toEntity(): TaskEntity {
+    return TaskEntity(
+        id = id,
+        title = title,
+        description = description ?: "",
+        isDone = isDone,
+        dueDate = dueDate,
+        reminderTime = reminderTime ?: 0L
+    )
+}
 
-fun TaskDto.toDomain(): Task = Task(
+fun TaskDto.toDomain(): Task {
+    return Task(
+        id = id,
+        title = title,
+        description = "",
+        isDone = isDone,
+        dueDate = 0L,
+        reminderTime = 0L
+    )
+}
+
+fun TaskDto.toEntity(): TaskEntity = TaskEntity(
     id = id,
     title = title,
-    description = description,
+    description = "",
     isDone = isDone,
-    dueDate = dueDate,
-    reminderTime = reminderTime
+    dueDate = 0L,
+    reminderTime = 0L
 )

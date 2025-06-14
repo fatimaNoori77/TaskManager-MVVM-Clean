@@ -9,15 +9,10 @@ data class TaskDto(
     @SerializedName("title")
     val title: String,
 
-    @SerializedName("description")
-    val description: String,
-
-    @SerializedName("is_done")
+    @SerializedName("completed")
     val isDone: Boolean,
 
-    @SerializedName("dueDate")
-    val dueDate: Long,
-
-    @SerializedName("reminderTime")
-    val reminderTime: Long
+    @SerializedName("userId")
+    val userId: Int
 )
+

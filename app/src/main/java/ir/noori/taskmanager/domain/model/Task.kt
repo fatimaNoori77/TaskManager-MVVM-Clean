@@ -4,7 +4,7 @@ data class Task(
     val id: Int = 0,
     val title: String,
     val description: String?,
-    val dueDate: Long,
-    val isDone: Boolean = false,
-    val reminderTime: Long? = null
+    var dueDate: Long =0,
+    var isDone: Boolean = false,
+    var reminderTime: Long? = null
 )
