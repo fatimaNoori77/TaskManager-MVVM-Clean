@@ -21,7 +21,7 @@ class TaskRepositoryImpl @Inject constructor(
 
     override suspend fun fetchRemoteTasks() {
         val remoteTasks = apiService.getTasks()
-        // for now, I just want to save the first 5 item
+        // for now, I just want to save the first 5 items
         taskDao.insertTasks(remoteTasks.take(5).map { it.toEntity() })
     }
 
@@ -36,4 +36,5 @@ class TaskRepositoryImpl @Inject constructor(
     override suspend fun insertTask(task: Task) {
         taskDao.insertTask(task.toEntity())
     }
+
 }

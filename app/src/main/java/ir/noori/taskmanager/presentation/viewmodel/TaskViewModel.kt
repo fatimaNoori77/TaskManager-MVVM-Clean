@@ -11,6 +11,7 @@ import ir.noori.taskmanager.domain.usecase.AddTaskUseCase
 import ir.noori.taskmanager.domain.usecase.DeleteTaskUseCase
 import ir.noori.taskmanager.domain.usecase.GetTasksUseCase
 import ir.noori.taskmanager.domain.usecase.ToggleTaskStatusUseCase
+import ir.noori.taskmanager.domain.usecase.UpdateTaskUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -24,6 +25,7 @@ class TaskViewModel @Inject constructor(
     private val getTasksUseCase: GetTasksUseCase,
     private val deleteTaskUseCase: DeleteTaskUseCase,
     private val toggleTaskStatusUseCase: ToggleTaskStatusUseCase,
+    private val updateTaskUseCase: UpdateTaskUseCase,
     private val addTaskUseCase: AddTaskUseCase,
     private val themePreferences: DataStore,
     private val repository: TaskRepository
@@ -61,6 +63,11 @@ class TaskViewModel @Inject constructor(
         }
     }
 
+    fun updateTask(task: Task) {
+        viewModelScope.launch {
+            updateTaskUseCase(task)
+        }
+    }
 
     val isDarkMode = themePreferences.isDarkMode.asLiveData()
     fun toggleTheme(currentTheme: Boolean) {

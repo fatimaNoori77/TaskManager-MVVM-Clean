@@ -15,7 +15,8 @@ import java.util.Locale
 
 class TaskAdapter(
     val onCheckChanged: (Task, Boolean) -> Unit,
-    val onDeleteClicked: (Task) -> Unit
+    val onDeleteClicked: (Task) -> Unit,
+    val onTaskClicked: (Task) -> Unit
 ) : ListAdapter<Task, TaskAdapter.TaskViewHolder>(DiffCallback()) {
 
     inner class TaskViewHolder(private val binding: ItemTaskBinding) :
@@ -37,6 +38,10 @@ class TaskAdapter(
 
             checkBoxDone.setOnCheckedChangeListener { _, isChecked ->
                 onCheckChanged(task, isChecked)
+            }
+
+            itemView.setOnClickListener {
+                onTaskClicked.invoke(task)
             }
 
             btnDelete.setOnClickListener {

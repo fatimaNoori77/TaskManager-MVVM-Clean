@@ -36,6 +36,9 @@ class MainActivity : AppCompatActivity() {
         },
         onDeleteClicked = { task ->
             viewModel.deleteTask(task.id)
+        },
+        onTaskClicked = {
+            showTaskDialog(it)
         }
     )
 
@@ -83,16 +86,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         binding.fabAddTask.setOnClickListener {
-          showAddTaskDialog()
+          showTaskDialog(null)
         }
     }
 
-    private fun showAddTaskDialog() {
+    private fun showTaskDialog(task: Task? = null) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_task, null)
-
         val titleEditText = dialogView.findViewById<EditText>(R.id.editTextTitle)
         val descriptionEditText = dialogView.findViewById<EditText>(R.id.editTextDescription)
         val deadlineEditText = dialogView.findViewById<EditText>(R.id.editTextDeadline)
+
+        task?.let {
+            titleEditText.setText(it.title)
+            descriptionEditText.setText(it.description ?: "")
+            deadlineEditText.setText(convertLongToDate(it.dueDate))
+        }
 
         var selectedDeadline: Long? = null
         deadlineEditText.inputType = InputType.TYPE_NULL
@@ -105,27 +113,39 @@ class MainActivity : AppCompatActivity() {
         }
 
         AlertDialog.Builder(this)
-            .setTitle("افزودن تسک جدید")
+            .setTitle(if(task == null) "add task" else "update task")
             .setView(dialogView)
-            .setPositiveButton("افزودن") { _, _ ->
+            .setPositiveButton("submit") { _, _ ->
                 val title = titleEditText.text.toString()
                 val description = descriptionEditText.text.toString()
 
                 if (title.isNotBlank()) {
-                    val task = Task(
-                        id = 0,
+                    val updatedTask = Task(
+                        id = task?.id ?: 0,
                         title = title,
                         description = description,
-                        dueDate = selectedDeadline!!,
-                        isDone = false
+                        dueDate = selectedDeadline ?: 0,
+                        isDone = false,
+                        reminderTime = 0
                     )
-                    viewModel.addTask(task)
+
+                    if(task == null){
+                        viewModel.addTask(updatedTask)
+                    }else{
+                        viewModel.updateTask(updatedTask)
+                    }
+
                 } else {
-                    Toast.makeText(this, "عنوان نباید خالی باشد", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "fill the title", Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton("لغو", null)
+            .setNegativeButton("cancel", null)
             .show()
+    }
+
+    private fun convertLongToDate(timeMillis: Long, pattern: String = "yyyy/MM/dd"): String {
+        val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+        return sdf.format(Date(timeMillis))
     }
 
     private fun showDatePickerDialog(onDateSelected: (Long) -> Unit) {
