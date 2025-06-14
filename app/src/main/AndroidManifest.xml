@@ -19,6 +19,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.TaskManager"
         tools:targetApi="31">
+
         <activity
             android:name=".presentation.ui.tasklist.MainActivity"
             android:exported="true">
@@ -28,6 +29,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <receiver
+            android:name=".data.alarm.AlarmReceiver"
+            android:exported="true"
+            android:enabled="true"/>
+
     </application>
 
 </manifest>

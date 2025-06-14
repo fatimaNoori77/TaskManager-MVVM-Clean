@@ -1,6 +1,9 @@
 package ir.noori.taskmanager.presentation.ui.tasklist
 
+import android.Manifest
 import android.app.DatePickerDialog
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -10,6 +13,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,6 +66,17 @@ class MainActivity : AppCompatActivity() {
         binding.actionBar.btnToggleTheme.setOnClickListener{
             viewModel.isDarkMode.value?.let { current ->
                 viewModel.toggleTheme(current)
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    1001
+                )
             }
         }
 
@@ -166,7 +182,5 @@ class MainActivity : AppCompatActivity() {
 
         datePicker.show()
     }
-
-
 
 }
