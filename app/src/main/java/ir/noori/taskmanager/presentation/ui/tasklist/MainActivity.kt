@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -120,6 +121,7 @@ class MainActivity : AppCompatActivity() {
         val dialogTitle = dialogView.findViewById<TextView>(R.id.dialogTitle)
         val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
         val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+        val chbReminder = dialogView.findViewById<CheckBox>(R.id.chbReminder)
 
         task?.let {
             titleEditText.setText(it.title)
@@ -152,6 +154,7 @@ class MainActivity : AppCompatActivity() {
         submitButton.setOnClickListener {
             val title = titleEditText.text.toString()
             val description = descriptionEditText.text.toString()
+            val wantsReminder = chbReminder.isChecked
 
             if (title.isNotBlank()) {
                 val updatedTask = Task(
@@ -160,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                     description = description,
                     dueDate = selectedDeadline ?: 0,
                     isDone = false,
-                    reminderTime = 0
+                    reminderTime = wantsReminder
                 )
 
                 if(task == null){

@@ -11,6 +11,8 @@ import ir.noori.taskmanager.domain.model.Task
 class AlarmScheduler(private val context: Context) {
 
     fun schedule(task: Task) {
+        if(!task.reminderTime) return
+
         val reminderTime = task.dueDate
         val adjustedReminderTime = reminderTime - 5 * 60 * 1000
         val intent = Intent(context, AlarmReceiver::class.java).apply {

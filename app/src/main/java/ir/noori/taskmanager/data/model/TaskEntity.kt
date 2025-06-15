@@ -11,5 +11,5 @@ data class TaskEntity(
     var description: String,
     var isDone: Boolean = false,
     var dueDate: Long= 0,
-    var reminderTime: Long = 0,
+    var reminderTime: Boolean = false,
 )

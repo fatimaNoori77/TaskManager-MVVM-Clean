@@ -72,6 +72,13 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <CheckBox
+            android:id="@+id/chbReminder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remind me 5 minutes before"
+            android:layout_marginTop="12dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,6 +98,7 @@
                 android:layout_height="wrap_content"
                 android:text="Submit"
                 android:layout_marginStart="8dp" />
+
         </LinearLayout>
 
     </LinearLayout>
