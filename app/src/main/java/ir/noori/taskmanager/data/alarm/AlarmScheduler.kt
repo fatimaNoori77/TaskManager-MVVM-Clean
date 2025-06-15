@@ -11,6 +11,8 @@ import ir.noori.taskmanager.domain.model.Task
 class AlarmScheduler(private val context: Context) {
 
     fun schedule(task: Task) {
+        val reminderTime = task.dueDate
+        val adjustedReminderTime = reminderTime - 5 * 60 * 1000
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("title", task.title)
             putExtra("description", task.description ?: "")
@@ -30,7 +32,7 @@ class AlarmScheduler(private val context: Context) {
             if (alarmManager.canScheduleExactAlarms()) {
                 alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
-                    task.reminderTime ?: return,
+                    adjustedReminderTime,
                     pendingIntent
                 )
             } else {
@@ -43,7 +45,7 @@ class AlarmScheduler(private val context: Context) {
         } else {
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
-                task.reminderTime ?: return,
+                adjustedReminderTime,
                 pendingIntent
             )
         }
