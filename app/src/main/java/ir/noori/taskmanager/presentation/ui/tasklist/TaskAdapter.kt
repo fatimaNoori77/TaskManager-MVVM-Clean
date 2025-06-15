@@ -33,7 +33,7 @@ class TaskAdapter(
             }
             txtDueDate.text = buildSpannedString {
                 append("Due: ")
-                append(SimpleDateFormat("MMM dd", Locale.getDefault()).format(Date(task.dueDate)))
+                append(SimpleDateFormat("MMM dd HH:mm", Locale.getDefault()).format(Date(task.dueDate)))
             }
             chbDoneTask.isChecked = task.isDone
 

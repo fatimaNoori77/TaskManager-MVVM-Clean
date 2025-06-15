@@ -62,6 +62,11 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextDeadline"
+                android:focusable="false"
+                android:cursorVisible="false"
+                android:longClickable="false"
+                android:inputType="none"
+                android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

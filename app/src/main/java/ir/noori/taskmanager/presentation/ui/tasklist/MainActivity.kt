@@ -2,6 +2,8 @@ package ir.noori.taskmanager.presentation.ui.tasklist
 
 import android.Manifest
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -128,9 +130,10 @@ class MainActivity : AppCompatActivity() {
         var selectedDeadline: Long? = null
         deadlineEditText.inputType = InputType.TYPE_NULL
         deadlineEditText.setOnClickListener {
-            showDatePickerDialog { timestamp ->
+            showDateTimePicker(this)
+            { timestamp ->
                 selectedDeadline = timestamp
-                val dateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(timestamp))
+                val dateStr = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(timestamp))
                 deadlineEditText.setText(dateStr)
             }
         }
@@ -169,6 +172,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "fill the title", Toast.LENGTH_SHORT).show()
             }
+            dialog.dismiss()
         }
         cancelButton.setOnClickListener {
             dialog.dismiss()
@@ -182,23 +186,30 @@ class MainActivity : AppCompatActivity() {
         return sdf.format(Date(timeMillis))
     }
 
-    private fun showDatePickerDialog(onDateSelected: (Long) -> Unit) {
+    private var selectedDateTimeInMillis: Long = 0
+
+    private fun showDateTimePicker(context: Context, onDateTimeSelected: (Long) -> Unit) {
         val calendar = Calendar.getInstance()
 
-        val datePicker = DatePickerDialog(
-            this,
-            { _, year, month, dayOfMonth ->
-                calendar.set(year, month, dayOfMonth, 0, 0, 0)
-                calendar.set(Calendar.MILLISECOND, 0)
-                val selectedTimestamp = calendar.timeInMillis
-                onDateSelected(selectedTimestamp)
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
+        DatePickerDialog(context, { _, year, month, dayOfMonth ->
+            calendar.set(Calendar.YEAR, year)
+            calendar.set(Calendar.MONTH, month)
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-        datePicker.show()
+            TimePickerDialog(context, { _, hourOfDay, minute ->
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                calendar.set(Calendar.MINUTE, minute)
+                calendar.set(Calendar.SECOND, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
+
+                val millis = calendar.timeInMillis
+                selectedDateTimeInMillis = millis
+                onDateTimeSelected(millis)
+
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
+
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
     }
+
 
 }
