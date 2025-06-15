@@ -43,6 +43,10 @@ class TaskAdapter(
                 txtTaskTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
 
+            chbFavorite.setOnCheckedChangeListener { _, isChecked ->
+            }
+
+
             chbDoneTask.setOnCheckedChangeListener { _, isChecked ->
                 onCheckChanged(task, isChecked)
             }
