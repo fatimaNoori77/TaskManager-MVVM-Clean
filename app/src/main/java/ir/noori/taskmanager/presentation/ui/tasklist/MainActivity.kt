@@ -3,11 +3,15 @@ package ir.noori.taskmanager.presentation.ui.tasklist
 import android.Manifest
 import android.app.DatePickerDialog
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
+import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -111,6 +115,9 @@ class MainActivity : AppCompatActivity() {
         val titleEditText = dialogView.findViewById<EditText>(R.id.editTextTitle)
         val descriptionEditText = dialogView.findViewById<EditText>(R.id.editTextDescription)
         val deadlineEditText = dialogView.findViewById<EditText>(R.id.editTextDeadline)
+        val dialogTitle = dialogView.findViewById<TextView>(R.id.dialogTitle)
+        val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
 
         task?.let {
             titleEditText.setText(it.title)
@@ -128,35 +135,46 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        AlertDialog.Builder(this)
-            .setTitle(if(task == null) "add task" else "update task")
+        val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
-            .setPositiveButton("submit") { _, _ ->
-                val title = titleEditText.text.toString()
-                val description = descriptionEditText.text.toString()
+            .create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        if (task != null) {
+            dialogTitle.text = "Edit Task"
+            titleEditText.setText(task.title)
+            descriptionEditText.setText(task.description)
+        } else {
+            dialogTitle.text = "Add Task"
+        }
+        submitButton.setOnClickListener {
+            val title = titleEditText.text.toString()
+            val description = descriptionEditText.text.toString()
 
-                if (title.isNotBlank()) {
-                    val updatedTask = Task(
-                        id = task?.id ?: 0,
-                        title = title,
-                        description = description,
-                        dueDate = selectedDeadline ?: 0,
-                        isDone = false,
-                        reminderTime = 0
-                    )
+            if (title.isNotBlank()) {
+                val updatedTask = Task(
+                    id = task?.id ?: 0,
+                    title = title,
+                    description = description,
+                    dueDate = selectedDeadline ?: 0,
+                    isDone = false,
+                    reminderTime = 0
+                )
 
-                    if(task == null){
-                        viewModel.addTask(updatedTask)
-                    }else{
-                        viewModel.updateTask(updatedTask)
-                    }
-
-                } else {
-                    Toast.makeText(this, "fill the title", Toast.LENGTH_SHORT).show()
+                if(task == null){
+                    viewModel.addTask(updatedTask)
+                }else{
+                    viewModel.updateTask(updatedTask)
                 }
+
+            } else {
+                Toast.makeText(this, "fill the title", Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("cancel", null)
-            .show()
+        }
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun convertLongToDate(timeMillis: Long, pattern: String = "yyyy/MM/dd"): String {
