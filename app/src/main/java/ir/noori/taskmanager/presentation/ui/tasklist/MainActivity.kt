@@ -29,6 +29,7 @@ import ir.noori.taskmanager.R
 import ir.noori.taskmanager.databinding.ActivityMainBinding
 import ir.noori.taskmanager.domain.model.Task
 import ir.noori.taskmanager.presentation.viewmodel.TaskViewModel
+import ir.noori.taskmanager.utils.CheckInternetStatus
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -59,26 +60,31 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.isDarkMode.observe(this) { isDark ->
-            AppCompatDelegate.setDefaultNightMode(
-                if (isDark) AppCompatDelegate.MODE_NIGHT_YES
-                else AppCompatDelegate.MODE_NIGHT_NO
-            )
-        }
-
         binding.actionBar.btnRefresh.setOnClickListener{
+            binding.swipeRefreshLayout.isRefreshing = true
             viewModel.refreshTasks()
         }
-
         binding.actionBar.btnToggleTheme.setOnClickListener{
             viewModel.isDarkMode.value?.let { current ->
                 viewModel.toggleTheme(current)
             }
         }
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshTasks()
+        }
 
+        checkPostNotificationPermission()
+        setupRecyclerView()
+        observer()
+        setupClickListeners()
+        checkInternetStatus()
+    }
+
+    private fun checkPostNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED
+            ) {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.POST_NOTIFICATIONS),
@@ -86,10 +92,6 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-
-        setupRecyclerView()
-        observeTasks()
-        setupClickListeners()
     }
 
     private fun setupRecyclerView() {
@@ -99,13 +101,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeTasks() {
+    private fun observer() {
         lifecycleScope.launch {
             viewModel.tasks.collectLatest { taskList ->
+                binding.swipeRefreshLayout.isRefreshing = false
                 taskAdapter.submitList(taskList)
             }
         }
+
+        viewModel.isDarkMode.observe(this) { isDark ->
+            AppCompatDelegate.setDefaultNightMode(
+                if (isDark) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
     }
+
+    private fun checkInternetStatus() {
+        if (!CheckInternetStatus.isInternetAvailable(applicationContext)) {
+            Toast.makeText(this, R.string.internet_warning, Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private fun setupClickListeners() {
         binding.fabAddTask.setOnClickListener {
@@ -145,11 +162,11 @@ class MainActivity : AppCompatActivity() {
             .create()
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         if (task != null) {
-            dialogTitle.text = "Edit Task"
+            dialogTitle.text = getString(R.string.edit_task)
             titleEditText.setText(task.title)
             descriptionEditText.setText(task.description)
         } else {
-            dialogTitle.text = "Add Task"
+            dialogTitle.text = getString(R.string.add_task)
         }
         submitButton.setOnClickListener {
             val title = titleEditText.text.toString()

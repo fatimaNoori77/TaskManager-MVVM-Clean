@@ -1,6 +1,7 @@
 package ir.noori.taskmanager.presentation.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -15,10 +16,8 @@ import ir.noori.taskmanager.domain.usecase.DeleteTaskUseCase
 import ir.noori.taskmanager.domain.usecase.GetTasksUseCase
 import ir.noori.taskmanager.domain.usecase.ToggleTaskStatusUseCase
 import ir.noori.taskmanager.domain.usecase.UpdateTaskUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,8 +34,7 @@ class TaskViewModel @Inject constructor(
     @ApplicationContext context: Context
 ) : ViewModel() {
 
-    val tasks: StateFlow<List<Task>> = getTasksUseCase.invoke()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(2000), emptyList())
+    val tasks: StateFlow<List<Task>> = getTasksUseCase.invoke().stateIn(viewModelScope, SharingStarted.WhileSubscribed(2000), emptyList())
 
     private val alarmScheduler = AlarmScheduler(context)
 
@@ -59,13 +57,14 @@ class TaskViewModel @Inject constructor(
         }
     }
 
-    private val _taskList = MutableStateFlow<List<Task>>(emptyList())
-    val taskList: StateFlow<List<Task>> = _taskList.asStateFlow()
     fun refreshTasks() {
         viewModelScope.launch {
-            repository.fetchRemoteTasks()
-            repository.getTasks().collect { tasks ->
-                _taskList.value = tasks
+            viewModelScope.launch {
+                try {
+                    repository.fetchRemoteTasks()
+                } catch (e: Exception) {
+                    Log.i("TAG", "refreshTasks: ${e.printStackTrace()}")
+                }
             }
         }
     }

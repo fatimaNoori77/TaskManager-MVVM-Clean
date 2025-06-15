@@ -15,14 +15,21 @@
             android:id="@+id/action_bar"
             layout="@layout/custom_action_bar" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_tasks"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:itemCount="5"
-            tools:listitem="@layout/item_task"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:padding="8dp"/>
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_tasks"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_task"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:padding="8dp"/>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
