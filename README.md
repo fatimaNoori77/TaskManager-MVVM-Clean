@@ -5,16 +5,6 @@ The app allows users to manage tasks with local storage, API sync, reminders, an
 
 ---
 
-## 📱 Screenshots
-
-<img src="asset/img_alarm_notification.png" width="250" alt="alarm notification"/>
-<img src="asset/img_add_task.png" width="250" alt="add task dialog"/>
-<img src="asset/img_date_time.png" width="250" alt="set date and time to remind"/>
-<img src="asset/img_task_list.png" width="250" alt="tasks list"/>
-<img src="asset/img_dark_theme.png" width="250" alt="dark and light theme"/>
-
----
-
 ## ✨ Features
 
 - ✅ View tasks from a remote API and store them locally
@@ -61,3 +51,15 @@ This app is built using:
 1. Clone the repository:
    ```bash
    git clone https://github.com/fatimaNoori77/TaskManager-MVVM-Clean
+
+---
+
+## 📱 Screenshots
+
+<img src="asset/img_alarm_notification.png" width="250" alt="alarm notification"/>
+<img src="asset/img_add_task.png" width="250" alt="add task dialog"/>
+<img src="asset/img_date_time.png" width="250" alt="set date and time to remind"/>
+<img src="asset/img_task_list.png" width="250" alt="tasks list"/>
+<img src="asset/img_dark_theme.png" width="250" alt="dark and light theme"/>
+
+---
