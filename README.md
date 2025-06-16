@@ -11,7 +11,7 @@ The app allows users to manage tasks with local storage, API sync, reminders, an
 <img src="asset/img_add_task.png" width="250" alt="add task dialog"/>
 <img src="asset/img_date_time.png" width="250" alt="set date and time to remind"/>
 <img src="asset/img_task_list.png" width="250" alt="tasks list"/>
-
+<img src="asset/img_dark_theme.png" width="250" alt="dark and light theme"/>
 
 ---
 
