@@ -7,7 +7,11 @@ The app allows users to manage tasks with local storage, API sync, reminders, an
 
 ## 📱 Screenshots
 
-> *(link...)*
+<img src="asset/img_alarm_notification.png" width="250" alt="alarm notification"/>
+<img src="asset/img_add_task.png" width="250" alt="add task dialog"/>
+<img src="asset/img_date_time.png" width="250" alt="set date and time to remind"/>
+<img src="asset/img_task_list.png" width="250" alt="tasks list"/>
+
 
 ---
 
@@ -15,7 +19,6 @@ The app allows users to manage tasks with local storage, API sync, reminders, an
 
 - ✅ View tasks from a remote API and store them locally
 - 📝 Add, edit, delete tasks offline
-- 🔄 Background sync with **WorkManager**
 - ⏰ Task reminders using **AlarmManager**
 - ⚙️ Settings screen (Dark Mode toggle) using **DataStore**
 - 🌐 Asynchronous networking with **Retrofit** + **Coroutines**
@@ -43,7 +46,6 @@ This app is built using:
 | MVVM              | Architecture Pattern           |
 | Room              | Local Database                 |
 | Retrofit          | REST API Client                |
-| WorkManager       | Background Jobs                |
 | AlarmManager      | Local Notifications/Reminders  |
 | DataStore         | Key-Value Storage (Settings)   |
 | Hilt              | Dependency Injection           |
