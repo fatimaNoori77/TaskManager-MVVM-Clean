@@ -1,12 +1,10 @@
 package ir.noori.taskmanager.presentation.viewmodel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import ir.noori.taskmanager.data.alarm.AlarmScheduler
 import ir.noori.taskmanager.data.local.DataStore
 import ir.noori.taskmanager.domain.model.Task
@@ -31,12 +29,10 @@ class TaskViewModel @Inject constructor(
     private val addTaskUseCase: AddTaskUseCase,
     private val themePreferences: DataStore,
     private val repository: TaskRepository,
-    @ApplicationContext context: Context
+    private val alarmScheduler: AlarmScheduler,
 ) : ViewModel() {
 
     val tasks: StateFlow<List<Task>> = getTasksUseCase.invoke().stateIn(viewModelScope, SharingStarted.WhileSubscribed(2000), emptyList())
-
-    private val alarmScheduler = AlarmScheduler(context)
 
     fun addTask(task: Task) {
         viewModelScope.launch {
