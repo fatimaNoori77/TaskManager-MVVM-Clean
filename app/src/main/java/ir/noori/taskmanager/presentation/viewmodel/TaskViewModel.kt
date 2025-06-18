@@ -32,7 +32,8 @@ class TaskViewModel @Inject constructor(
     private val alarmScheduler: AlarmScheduler,
 ) : ViewModel() {
 
-    val tasks: StateFlow<List<Task>> = getTasksUseCase.invoke().stateIn(viewModelScope, SharingStarted.WhileSubscribed(2000), emptyList())
+    val tasks: StateFlow<List<Task>> = getTasksUseCase.invoke()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(2000), emptyList())
 
     fun addTask(task: Task) {
         viewModelScope.launch {
@@ -55,12 +56,10 @@ class TaskViewModel @Inject constructor(
 
     fun refreshTasks() {
         viewModelScope.launch {
-            viewModelScope.launch {
-                try {
-                    repository.fetchRemoteTasks()
-                } catch (e: Exception) {
-                    Log.i("TAG", "refreshTasks: ${e.printStackTrace()}")
-                }
+            try {
+                repository.fetchRemoteTasks()
+            } catch (e: Exception) {
+                Log.i("TAG", "refreshTasks: ${e.printStackTrace()}")
             }
         }
     }

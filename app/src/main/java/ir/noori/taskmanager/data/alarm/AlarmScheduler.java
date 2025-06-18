@@ -7,11 +7,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import dagger.hilt.android.qualifiers.ApplicationContext;
+import ir.noori.taskmanager.core.constant.AppConstant;
 import ir.noori.taskmanager.domain.model.Task;
 
 @Singleton
@@ -33,9 +32,9 @@ public class AlarmScheduler {
         long adjustedReminderTime = reminderTime - 5 * 60 * 1000;
 
         Intent intent = new Intent(context, AlarmReceiver.class);
-        intent.putExtra("title", task.getTitle());
-        intent.putExtra("description", task.getDescription() != null ? task.getDescription() : "");
-        intent.putExtra("taskId", task.getId());
+        intent.putExtra(AppConstant.EXTRA_TITLE, task.getTitle());
+        intent.putExtra(AppConstant.EXTRA_DESCRIPTION, task.getDescription() != null ? task.getDescription() : "");
+        intent.putExtra(AppConstant.EXTRA_TASK_ID, task.getId());
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
