@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.noori.taskmanager.data.alarm.AlarmScheduler
 import ir.noori.taskmanager.data.local.DataStore
 import ir.noori.taskmanager.domain.model.Task
-import ir.noori.taskmanager.domain.repository.TaskRepository
 import ir.noori.taskmanager.domain.usecase.AddTaskUseCase
 import ir.noori.taskmanager.domain.usecase.DeleteTaskUseCase
 import ir.noori.taskmanager.domain.usecase.GetTasksUseCase
@@ -28,7 +27,6 @@ class TaskViewModel @Inject constructor(
     private val updateTaskUseCase: UpdateTaskUseCase,
     private val addTaskUseCase: AddTaskUseCase,
     private val themePreferences: DataStore,
-    private val repository: TaskRepository,
     private val alarmScheduler: AlarmScheduler,
 ) : ViewModel() {
 
@@ -57,7 +55,7 @@ class TaskViewModel @Inject constructor(
     fun refreshTasks() {
         viewModelScope.launch {
             try {
-                repository.fetchRemoteTasks()
+               getTasksUseCase.fetchFromRemote()
             } catch (e: Exception) {
                 Log.i("TAG", "refreshTasks: ${e.printStackTrace()}")
             }

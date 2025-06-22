@@ -8,7 +8,7 @@ import ir.noori.taskmanager.data.model.TaskEntity;
 
 @Database(
         entities = {TaskEntity.class},
-        version = 1,
+        version = 2,
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
