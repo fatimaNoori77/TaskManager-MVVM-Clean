@@ -22,7 +22,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ir.noori.taskmanager.R
@@ -103,9 +105,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun observer() {
         lifecycleScope.launch {
-            viewModel.tasks.collectLatest { taskList ->
-                binding.swipeRefreshLayout.isRefreshing = false
-                taskAdapter.submitList(taskList)
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.tasks.collectLatest { taskList ->
+                    binding.swipeRefreshLayout.isRefreshing = false
+                    taskAdapter.submitList(taskList)
+                }
             }
         }
 
