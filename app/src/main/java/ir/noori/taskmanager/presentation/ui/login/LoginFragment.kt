@@ -9,8 +9,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import ir.noori.taskmanager.R
 import ir.noori.taskmanager.databinding.FragmentLoginBinding
 import ir.noori.taskmanager.domain.model.LoginInput
+import ir.noori.taskmanager.presentation.ui.user.ProfileFragment
 import ir.noori.taskmanager.presentation.viewmodel.LoginState
 import ir.noori.taskmanager.presentation.viewmodel.LoginViewModel
 
@@ -47,6 +49,7 @@ class LoginFragment : Fragment() {
 
     private fun observers(){
         loginViewModel.loginResponse.observe(viewLifecycleOwner){state ->
+            binding.progressBar.visibility = View.GONE
             when(state){
                 is LoginState.Error -> {
                     // show error message
@@ -54,7 +57,7 @@ class LoginFragment : Fragment() {
                 }
                 LoginState.Loading -> {
                     // show loading
-                    Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show()
+                    binding.progressBar.visibility = View.VISIBLE
                 }
                 is LoginState.Success -> {
                     // navigate to task list
@@ -66,11 +69,11 @@ class LoginFragment : Fragment() {
 
     fun navigateToDirectionFragment() {
         Log.i("TAG", "navigateToDirectionFragment: ")
-//        childFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_container,LoginFragment())
-//            .addToBackStack(null)
-//            .commit()
+        childFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, ProfileFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
 
