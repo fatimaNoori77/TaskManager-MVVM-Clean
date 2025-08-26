@@ -1,5 +1,5 @@
 [versions]
-agp = "8.6.1"
+agp = "8.11.1"
 datastorePreferencesVersion = "1.1.7"
 hiltCompiler = "2.51.1"
 kotlin = "2.1.10"
