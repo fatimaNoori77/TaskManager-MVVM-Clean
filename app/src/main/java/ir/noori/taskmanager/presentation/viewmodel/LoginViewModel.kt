@@ -5,16 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.noori.taskmanager.data.local.DataStore
 import ir.noori.taskmanager.domain.model.LoginInput
 import ir.noori.taskmanager.domain.model.LoginOutput
 import ir.noori.taskmanager.domain.usecase.LoginUseCase
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val dataStore: DataStore,
 ) : ViewModel() {
 
     private val _loginResponse = MutableLiveData<LoginState>()
@@ -25,7 +26,13 @@ class LoginViewModel @Inject constructor(
             _loginResponse.value = LoginState.Loading
             val response = loginUseCase.invoke(loginParams)
             try {
-                _loginResponse.value = LoginState.Success(response.first())
+                if(response.isSuccessful){
+                    dataStore.setAccessToken(response.body()?.accessToken ?: "")
+                    dataStore.setRefreshToken(response.body()?.refreshToken ?: "")
+                    _loginResponse.value = LoginState.Success(response.body()!!)
+                }else{
+                    _loginResponse.value = LoginState.Error(response.errorBody().toString())
+                }
             }catch (e: Exception){
                 _loginResponse.value = LoginState.Error(e.message.toString())
             }

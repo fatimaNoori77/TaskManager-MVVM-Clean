@@ -2,9 +2,9 @@ package ir.noori.taskmanager.domain.repository
 
 import ir.noori.taskmanager.domain.model.LoginInput
 import ir.noori.taskmanager.domain.model.LoginOutput
-import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
 interface LoginRepository {
 
-    suspend fun doLogin(loginParams: LoginInput): Flow<LoginOutput>
+    suspend fun doLogin(loginParams: LoginInput): Response<LoginOutput>
 }
