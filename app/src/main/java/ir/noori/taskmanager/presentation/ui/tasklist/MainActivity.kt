@@ -30,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.noori.taskmanager.R
 import ir.noori.taskmanager.databinding.ActivityMainBinding
 import ir.noori.taskmanager.domain.model.Task
+import ir.noori.taskmanager.presentation.ui.login.LoginFragment
 import ir.noori.taskmanager.presentation.viewmodel.TaskViewModel
 import ir.noori.taskmanager.utils.CheckInternetStatus
 import kotlinx.coroutines.flow.collectLatest
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        navigateToDirectionFragment()
 
         binding.actionBar.btnRefresh.setOnClickListener{
             binding.swipeRefreshLayout.isRefreshing = true
@@ -80,6 +82,14 @@ class MainActivity : AppCompatActivity() {
         observer()
         setupClickListeners()
         checkInternetStatus()
+    }
+
+    fun navigateToDirectionFragment() {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container,LoginFragment())
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun checkPostNotificationPermission() {

@@ -1,11 +1,13 @@
 package ir.noori.taskmanager.di;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import ir.noori.taskmanager.data.remote.api.LoginApiService;
 import ir.noori.taskmanager.data.remote.api.TaskApiService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -35,6 +37,7 @@ public class NetworkModule {
 
     @Provides
     @Singleton
+    @Named("tasks")
     public Retrofit provideRetrofit(OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl("https://jsonplaceholder.typicode.com")
@@ -42,10 +45,26 @@ public class NetworkModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
+    @Provides
+    @Singleton
+    @Named("login")
+    public Retrofit provideRetrofitLogin(OkHttpClient okHttpClient) {
+        return new Retrofit.Builder()
+                .baseUrl("https://dummyjson.com")
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
 
     @Provides
     @Singleton
-    public TaskApiService provideTaskApiService(Retrofit retrofit) {
+    public TaskApiService provideTaskApiService( @Named("tasks") Retrofit retrofit) {
         return retrofit.create(TaskApiService.class);
+    }
+
+    @Provides
+    @Singleton
+    public LoginApiService provideLoginApiService( @Named("login") Retrofit retrofit) {
+        return retrofit.create(LoginApiService.class);
     }
 }
