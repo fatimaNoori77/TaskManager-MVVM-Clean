@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import ir.noori.taskmanager.R
 import ir.noori.taskmanager.databinding.FragmentLoginBinding
-import ir.noori.taskmanager.domain.model.LoginInput
+import ir.noori.taskmanager.domain.model.LoginRequest
 import ir.noori.taskmanager.presentation.ui.user.ProfileFragment
 import ir.noori.taskmanager.presentation.viewmodel.LoginState
 import ir.noori.taskmanager.presentation.viewmodel.LoginViewModel
@@ -39,11 +39,8 @@ class LoginFragment : Fragment() {
         binding.enterButton.setOnClickListener {
             val username = binding.editUsername.text.toString().trim()
             val password = binding.editPassword.text.toString().trim()
-            val inputs = LoginInput(
-                username,
-                password
-            )
-            loginViewModel.login(inputs)
+
+            loginViewModel.login(LoginRequest(username, password))
         }
     }
 
@@ -69,7 +66,7 @@ class LoginFragment : Fragment() {
 
     fun navigateToDirectionFragment() {
         Log.i("TAG", "navigateToDirectionFragment: ")
-        childFragmentManager
+        parentFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, ProfileFragment())
             .addToBackStack(null)

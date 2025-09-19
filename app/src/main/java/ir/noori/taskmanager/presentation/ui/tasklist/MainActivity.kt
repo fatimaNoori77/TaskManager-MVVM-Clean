@@ -28,6 +28,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ir.noori.taskmanager.R
+import ir.noori.taskmanager.data.local.DataStore
 import ir.noori.taskmanager.databinding.ActivityMainBinding
 import ir.noori.taskmanager.domain.model.Task
 import ir.noori.taskmanager.presentation.ui.login.LoginFragment
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: TaskViewModel by viewModels()
-
+    private lateinit var dataStore : DataStore
     private val taskAdapter = TaskAdapter(
         onCheckChanged = { task, _ ->
             viewModel.toggleTaskDone(task)
@@ -62,6 +63,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        dataStore = DataStore(this)
+//        if (checkLogin()) return
         navigateToDirectionFragment()
 
         binding.actionBar.btnRefresh.setOnClickListener{
@@ -82,6 +85,14 @@ class MainActivity : AppCompatActivity() {
         observer()
         setupClickListeners()
         checkInternetStatus()
+    }
+
+    private fun checkLogin(): Boolean {
+        if (dataStore.accessToken.equals("")) {
+
+            return true
+        }
+        return false
     }
 
     fun navigateToDirectionFragment() {
