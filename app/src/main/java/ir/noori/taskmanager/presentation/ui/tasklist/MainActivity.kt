@@ -32,6 +32,8 @@ import ir.noori.taskmanager.data.local.DataStore
 import ir.noori.taskmanager.databinding.ActivityMainBinding
 import ir.noori.taskmanager.domain.model.Task
 import ir.noori.taskmanager.presentation.ui.login.LoginFragment
+import ir.noori.taskmanager.presentation.viewmodel.SplashEvents
+import ir.noori.taskmanager.presentation.viewmodel.SplashViewModel
 import ir.noori.taskmanager.presentation.viewmodel.TaskViewModel
 import ir.noori.taskmanager.utils.CheckInternetStatus
 import kotlinx.coroutines.flow.collectLatest
@@ -46,7 +48,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: TaskViewModel by viewModels()
-    private lateinit var dataStore : DataStore
+    private val splashViewModel: SplashViewModel by viewModels()
+    private lateinit var dataStore: DataStore
     private val taskAdapter = TaskAdapter(
         onCheckChanged = { task, _ ->
             viewModel.toggleTaskDone(task)
@@ -64,14 +67,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         dataStore = DataStore(this)
-//        if (checkLogin()) return
-        navigateToDirectionFragment()
 
-        binding.actionBar.btnRefresh.setOnClickListener{
+        binding.actionBar.btnRefresh.setOnClickListener {
             binding.swipeRefreshLayout.isRefreshing = true
             viewModel.refreshTasks()
         }
-        binding.actionBar.btnToggleTheme.setOnClickListener{
+        binding.actionBar.btnToggleTheme.setOnClickListener {
             viewModel.isDarkMode.value?.let { current ->
                 viewModel.toggleTheme(current)
             }
@@ -87,21 +88,6 @@ class MainActivity : AppCompatActivity() {
         checkInternetStatus()
     }
 
-    private fun checkLogin(): Boolean {
-        if (dataStore.accessToken.equals("")) {
-
-            return true
-        }
-        return false
-    }
-
-    fun navigateToDirectionFragment() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container,LoginFragment())
-            .addToBackStack(null)
-            .commit()
-    }
 
     private fun checkPostNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -127,9 +113,34 @@ class MainActivity : AppCompatActivity() {
     private fun observer() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                splashViewModel.event.collect { events ->
+                    when (events) {
+                        SplashEvents.NavigateToHome -> {
+                            Toast.makeText(applicationContext, "navigate to home", Toast.LENGTH_SHORT).show()
+                        }
+
+                        SplashEvents.NavigateToLogin -> {
+                            Toast.makeText(applicationContext, "navigate to login", Toast.LENGTH_SHORT).show()
+                            supportFragmentManager
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, LoginFragment())
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.tasks.collectLatest { taskList ->
                     binding.swipeRefreshLayout.isRefreshing = false
                     taskAdapter.submitList(taskList)
+                }
+
+                splashViewModel.uiState.collect { state ->
+                    Toast.makeText(applicationContext, "ui state $state", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -151,7 +162,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         binding.fabAddTask.setOnClickListener {
-          showTaskDialog(null)
+            showTaskDialog(null)
         }
     }
 
@@ -177,7 +188,11 @@ class MainActivity : AppCompatActivity() {
             showDateTimePicker(this)
             { timestamp ->
                 selectedDeadline = timestamp
-                val dateStr = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(timestamp))
+                val dateStr =
+                    SimpleDateFormat(
+                        "yyyy-MM-dd HH:mm",
+                        Locale.getDefault()
+                    ).format(Date(timestamp))
                 deadlineEditText.setText(dateStr)
             }
         }
@@ -208,9 +223,9 @@ class MainActivity : AppCompatActivity() {
                     reminderTime = wantsReminder
                 )
 
-                if(task == null){
+                if (task == null) {
                     viewModel.addTask(updatedTask)
-                }else{
+                } else {
                     viewModel.updateTask(updatedTask)
                 }
 
@@ -236,24 +251,30 @@ class MainActivity : AppCompatActivity() {
     private fun showDateTimePicker(context: Context, onDateTimeSelected: (Long) -> Unit) {
         val calendar = Calendar.getInstance()
 
-        DatePickerDialog(context, { _, year, month, dayOfMonth ->
-            calendar.set(Calendar.YEAR, year)
-            calendar.set(Calendar.MONTH, month)
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                calendar.set(Calendar.YEAR, year)
+                calendar.set(Calendar.MONTH, month)
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-            TimePickerDialog(context, { _, hourOfDay, minute ->
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                calendar.set(Calendar.MINUTE, minute)
-                calendar.set(Calendar.SECOND, 0)
-                calendar.set(Calendar.MILLISECOND, 0)
+                TimePickerDialog(context, { _, hourOfDay, minute ->
+                    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                    calendar.set(Calendar.MINUTE, minute)
+                    calendar.set(Calendar.SECOND, 0)
+                    calendar.set(Calendar.MILLISECOND, 0)
 
-                val millis = calendar.timeInMillis
-                selectedDateTimeInMillis = millis
-                onDateTimeSelected(millis)
+                    val millis = calendar.timeInMillis
+                    selectedDateTimeInMillis = millis
+                    onDateTimeSelected(millis)
 
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
+                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
 
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
 

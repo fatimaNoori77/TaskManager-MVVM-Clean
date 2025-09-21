@@ -1,5 +1,6 @@
 package ir.noori.taskmanager.data.repository
 
+import ir.noori.taskmanager.data.local.DataStore
 import ir.noori.taskmanager.data.remote.api.LoginApiService
 import ir.noori.taskmanager.domain.model.DomainResult
 import ir.noori.taskmanager.domain.model.LoginRequest
@@ -9,7 +10,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class LoginRepositoryImpl @Inject constructor(
-    private val loginApiService: LoginApiService
+    private val loginApiService: LoginApiService,
+    private val dataStore: DataStore
 ) : LoginRepository {
 
     override suspend fun login(
@@ -25,12 +27,10 @@ class LoginRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveSession(session: UserSession) {
-        TODO("Not yet implemented")
+        dataStore.saveSession(session)
     }
 
-    override fun observeSession(): Flow<UserSession?> {
-        TODO("Not yet implemented")
-    }
+    override fun observeSession(): Flow<UserSession?> = dataStore.observeSession()
 
     override suspend fun logout() {
         TODO("Not yet implemented")

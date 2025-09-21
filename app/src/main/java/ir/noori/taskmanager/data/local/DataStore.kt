@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ir.noori.taskmanager.core.constant.AppConstant
+import ir.noori.taskmanager.domain.model.UserSession
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -18,6 +19,7 @@ class DataStore @Inject constructor(@ApplicationContext private val context: Con
         val THEME_KEY = booleanPreferencesKey(AppConstant.IS_DARK_MODE)
         val ACCESS_TOKEN = stringPreferencesKey(AppConstant.ACCESS_TOKEN)
         val REFRESH_TOKEN = stringPreferencesKey(AppConstant.REFRESH_TOKEN)
+        val USER_ID = stringPreferencesKey(AppConstant.USER_ID)
     }
 
     val isDarkMode: Flow<Boolean> = context.dataStore.data
@@ -26,6 +28,25 @@ class DataStore @Inject constructor(@ApplicationContext private val context: Con
     suspend fun toggleTheme(current: Boolean) {
         context.dataStore.edit { it[THEME_KEY] = !current }
     }
+
+    suspend fun saveSession(session: UserSession){
+        context.dataStore.edit { prefs->
+            prefs[ACCESS_TOKEN] = session.accessToken
+            prefs[REFRESH_TOKEN] = session.refreshToken
+            prefs[USER_ID] = "1"
+        }
+    }
+
+    fun observeSession(): Flow<UserSession?> =
+        context.dataStore.data.map {  prefs->
+            val access = prefs[ACCESS_TOKEN] ?: return@map null
+            if(access.isBlank()) return@map null
+            UserSession(
+                accessToken = access,
+                refreshToken = prefs[REFRESH_TOKEN] ?: ""
+            )
+        }
+
 
     val accessToken: Flow<String> = context.dataStore.data.map { it[ACCESS_TOKEN]?: ""}
 
