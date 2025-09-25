@@ -88,7 +88,6 @@ class MainActivity : AppCompatActivity() {
         checkInternetStatus()
     }
 
-
     private fun checkPostNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
@@ -158,7 +157,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.internet_warning, Toast.LENGTH_SHORT).show()
         }
     }
-
 
     private fun setupClickListeners() {
         binding.fabAddTask.setOnClickListener {
