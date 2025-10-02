@@ -1,4 +1,4 @@
-package ir.noori.taskmanager.data.model
+package ir.noori.taskmanager.data.dto
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

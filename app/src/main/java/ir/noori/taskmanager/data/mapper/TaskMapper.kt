@@ -1,7 +1,7 @@
 package ir.noori.taskmanager.data.mapper
 
-import ir.noori.taskmanager.data.model.TaskDto
-import ir.noori.taskmanager.data.model.TaskEntity
+import ir.noori.taskmanager.data.dto.TaskDto
+import ir.noori.taskmanager.data.dto.TaskEntity
 import ir.noori.taskmanager.domain.model.Task
 
 fun TaskEntity.toDomain(): Task {
