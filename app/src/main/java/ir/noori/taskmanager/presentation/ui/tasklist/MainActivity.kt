@@ -1,5 +1,6 @@
 package ir.noori.taskmanager.presentation.ui.tasklist
 
+import CheckInternetStatus
 import android.Manifest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -31,11 +32,9 @@ import ir.noori.taskmanager.R
 import ir.noori.taskmanager.data.local.DataStore
 import ir.noori.taskmanager.databinding.ActivityMainBinding
 import ir.noori.taskmanager.domain.model.Task
-import ir.noori.taskmanager.presentation.ui.login.LoginFragment
 import ir.noori.taskmanager.presentation.viewmodel.SplashEvents
 import ir.noori.taskmanager.presentation.viewmodel.SplashViewModel
 import ir.noori.taskmanager.presentation.viewmodel.TaskViewModel
-import ir.noori.taskmanager.utils.CheckInternetStatus
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -120,11 +119,12 @@ class MainActivity : AppCompatActivity() {
 
                         SplashEvents.NavigateToLogin -> {
                             Toast.makeText(applicationContext, "navigate to login", Toast.LENGTH_SHORT).show()
-                            supportFragmentManager
-                                .beginTransaction()
-                                .replace(R.id.fragment_container, LoginFragment())
-                                .addToBackStack(null)
-                                .commit()
+
+//                            supportFragmentManager
+//                                .beginTransaction()
+//                                .replace(R.id.fragment_container, LoginFragment())
+//                                .addToBackStack(null)
+//                                .commit()
                         }
                     }
                 }
@@ -150,6 +150,10 @@ class MainActivity : AppCompatActivity() {
                 else AppCompatDelegate.MODE_NIGHT_NO
             )
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return super.onSupportNavigateUp()
     }
 
     private fun checkInternetStatus() {
