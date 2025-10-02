@@ -1,70 +1,66 @@
-package ir.noori.taskmanager.di;
+package ir.noori.taskmanager.di
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-import dagger.hilt.InstallIn;
-import dagger.hilt.components.SingletonComponent;
-import ir.noori.taskmanager.data.remote.api.LoginApiService;
-import ir.noori.taskmanager.data.remote.api.TaskApiService;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import ir.noori.taskmanager.data.remote.api.LoginApiService
+import ir.noori.taskmanager.data.remote.api.TaskApiService
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent.class)
-public class NetworkModule {
-    private static final String TAG = "NetworkModule";
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
+
+    private const val TASKS_BASE_URL = "https://jsonplaceholder.typicode.com"
+    private const val LOGIN_BASE_URL = "https://dummyjson.com"
 
     @Provides
     @Singleton
-    public HttpLoggingInterceptor provideLoggingInterceptor() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        return interceptor;
-    }
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
 
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient(HttpLoggingInterceptor loggingInterceptor) {
-        return new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .build();
-    }
+    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
 
     @Provides
     @Singleton
     @Named("tasks")
-    public Retrofit provideRetrofit(OkHttpClient okHttpClient) {
-        return new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com")
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-    }
+    fun provideRetrofitTasks(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(TASKS_BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
     @Provides
     @Singleton
     @Named("login")
-    public Retrofit provideRetrofitLogin(OkHttpClient okHttpClient) {
-        return new Retrofit.Builder()
-                .baseUrl("https://dummyjson.com")
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-    }
+    fun provideRetrofitLogin(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(LOGIN_BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
     @Provides
     @Singleton
-    public TaskApiService provideTaskApiService( @Named("tasks") Retrofit retrofit) {
-        return retrofit.create(TaskApiService.class);
-    }
+    fun provideTaskApiService(@Named("tasks") retrofit: Retrofit): TaskApiService =
+        retrofit.create(TaskApiService::class.java)
 
     @Provides
     @Singleton
-    public LoginApiService provideLoginApiService( @Named("login") Retrofit retrofit) {
-        return retrofit.create(LoginApiService.class);
-    }
+    fun provideLoginApiService(@Named("login") retrofit: Retrofit): LoginApiService =
+        retrofit.create(LoginApiService::class.java)
 }
