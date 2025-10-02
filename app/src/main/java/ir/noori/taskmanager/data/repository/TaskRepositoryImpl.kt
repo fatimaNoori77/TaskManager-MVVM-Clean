@@ -22,19 +22,15 @@ class TaskRepositoryImpl @Inject constructor(
     override suspend fun fetchRemoteTasks() {
         val remoteTasks = apiService.getTasks()
         // for now, I just want to save the first 5 items
-        taskDao.insertTasks(remoteTasks.take(5).map { it.toEntity() })
+        taskDao.upsertTasks(remoteTasks.take(5).map { it.toEntity() })
     }
 
     override suspend fun deleteTask(id: Int) {
         taskDao.deleteTaskById(id)
     }
 
-    override suspend fun updateTask(task: Task) {
-        taskDao.updateTask(task.toEntity())
-    }
-
-    override suspend fun insertTask(task: Task) {
-        taskDao.insertTask(task.toEntity())
+    override suspend fun upsertTask(task: Task) {
+        taskDao.upsertTask(task.toEntity())
     }
 
 }

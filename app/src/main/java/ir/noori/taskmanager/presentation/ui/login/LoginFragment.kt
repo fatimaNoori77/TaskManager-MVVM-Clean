@@ -9,10 +9,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import ir.noori.taskmanager.R
 import ir.noori.taskmanager.databinding.FragmentLoginBinding
 import ir.noori.taskmanager.domain.model.LoginRequest
-import ir.noori.taskmanager.presentation.ui.user.ProfileFragment
 import ir.noori.taskmanager.presentation.viewmodel.LoginState
 import ir.noori.taskmanager.presentation.viewmodel.LoginViewModel
 
@@ -66,11 +64,11 @@ class LoginFragment : Fragment() {
 
     fun navigateToDirectionFragment() {
         Log.i("TAG", "navigateToDirectionFragment: ")
-        parentFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, ProfileFragment())
-            .addToBackStack(null)
-            .commit()
+//        parentFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.fragment_container, ProfileFragment())
+//            .addToBackStack(null)
+//            .commit()
     }
 
 

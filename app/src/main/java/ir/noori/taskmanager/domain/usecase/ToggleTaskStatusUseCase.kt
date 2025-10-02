@@ -9,6 +9,6 @@ class ToggleTaskStatusUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(task: Task) {
         val updatedTask = task.copy(isDone = !task.isDone)
-        repository.updateTask(updatedTask)
+        repository.upsertTask(updatedTask)
     }
 }
