@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_main">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="ir.noori.taskmanager.presentation.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="ir.noori.taskmanager.presentation.ui.user.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+
+        <action
+            android:id="@+id/action_profileFragment_to_taskListFragment"
+            app:destination="@id/taskListFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/taskListFragment"
+        android:name="ir.noori.taskmanager.presentation.ui.tasklist.TaskListFragment"
+        android:label="fragment_task_list"
+        tools:layout="@layout/fragment_task_list" >
+        <action
+            android:id="@+id/action_taskListFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_taskListFragment_to_addTaskDialogFragment"
+            app:destination="@id/addTaskDialogFragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/addTaskDialogFragment"
+        android:name="ir.noori.taskmanager.presentation.ui.tasklist.AddTaskDialogFragment"
+        android:label="AddTaskDialogFragment" />
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="ir.noori.taskmanager.presentation.ui.splash.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" />
 
 </navigation>
