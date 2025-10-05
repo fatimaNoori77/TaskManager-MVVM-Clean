@@ -15,6 +15,8 @@ import javax.inject.Inject
 private val Context.dataStore by preferencesDataStore(name = AppConstant.DATA_STORE_NAME)
 
 class DataStore @Inject constructor(@ApplicationContext private val context: Context) {
+
+    private val dataStore = context.dataStore
     companion object {
         val THEME_KEY = booleanPreferencesKey(AppConstant.IS_DARK_MODE)
         val ACCESS_TOKEN = stringPreferencesKey(AppConstant.ACCESS_TOKEN)
@@ -22,15 +24,15 @@ class DataStore @Inject constructor(@ApplicationContext private val context: Con
         val USER_ID = stringPreferencesKey(AppConstant.USER_ID)
     }
 
-    val isDarkMode: Flow<Boolean> = context.dataStore.data
+    val isDarkMode: Flow<Boolean> = dataStore.data
         .map { it[THEME_KEY] ?: false }
 
     suspend fun toggleTheme(current: Boolean) {
-        context.dataStore.edit { it[THEME_KEY] = !current }
+        dataStore.edit { it[THEME_KEY] = !current }
     }
 
     suspend fun saveSession(session: UserSession){
-        context.dataStore.edit { prefs->
+        dataStore.edit { prefs->
             prefs[ACCESS_TOKEN] = session.accessToken
             prefs[REFRESH_TOKEN] = session.refreshToken
             prefs[USER_ID] = "1"
@@ -38,7 +40,7 @@ class DataStore @Inject constructor(@ApplicationContext private val context: Con
     }
 
     fun observeSession(): Flow<UserSession?> =
-        context.dataStore.data.map {  prefs->
+        dataStore.data.map {  prefs->
             val access = prefs[ACCESS_TOKEN] ?: return@map null
             if(access.isBlank()) return@map null
             UserSession(
@@ -48,15 +50,15 @@ class DataStore @Inject constructor(@ApplicationContext private val context: Con
         }
 
 
-    val accessToken: Flow<String> = context.dataStore.data.map { it[ACCESS_TOKEN]?: ""}
+    val accessToken: Flow<String> = dataStore.data.map { it[ACCESS_TOKEN]?: ""}
 
     suspend fun setAccessToken(token: String) {
-        context.dataStore.edit { it[ACCESS_TOKEN] = token }
+        dataStore.edit { it[ACCESS_TOKEN] = token }
     }
 
-    val refreshToken: Flow<String> = context.dataStore.data.map { it[REFRESH_TOKEN]?: ""}
+    val refreshToken: Flow<String> = dataStore.data.map { it[REFRESH_TOKEN]?: ""}
 
     suspend fun setRefreshToken(token: String) {
-        context.dataStore.edit { it[REFRESH_TOKEN] = token }
+        dataStore.edit { it[REFRESH_TOKEN] = token }
     }
 }

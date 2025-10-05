@@ -26,10 +26,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ir.noori.taskmanager.R
-import ir.noori.taskmanager.data.local.DataStore
 import ir.noori.taskmanager.databinding.ActivityMainBinding
 import ir.noori.taskmanager.domain.model.Task
 import ir.noori.taskmanager.presentation.viewmodel.SplashEvents
@@ -48,7 +48,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: TaskViewModel by viewModels()
     private val splashViewModel: SplashViewModel by viewModels()
-    private lateinit var dataStore: DataStore
     private val taskAdapter = TaskAdapter(
         onCheckChanged = { task, _ ->
             viewModel.toggleTaskDone(task)
@@ -65,7 +64,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        dataStore = DataStore(this)
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
+        val navController = navHostFragment.navController
 
         binding.actionBar.btnRefresh.setOnClickListener {
             binding.swipeRefreshLayout.isRefreshing = true
