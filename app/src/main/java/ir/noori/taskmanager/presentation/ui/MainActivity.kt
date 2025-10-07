@@ -1,4 +1,4 @@
-package ir.noori.taskmanager.presentation.ui.tasklist
+package ir.noori.taskmanager.presentation.ui
 
 import CheckInternetStatus
 import android.Manifest
@@ -32,9 +32,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.noori.taskmanager.R
 import ir.noori.taskmanager.databinding.ActivityMainBinding
 import ir.noori.taskmanager.domain.model.Task
-import ir.noori.taskmanager.presentation.viewmodel.SplashEvents
-import ir.noori.taskmanager.presentation.viewmodel.SplashViewModel
-import ir.noori.taskmanager.presentation.viewmodel.TaskViewModel
+import ir.noori.taskmanager.presentation.ui.splash.SplashViewModel
+import ir.noori.taskmanager.presentation.ui.tasklist.TaskAdapter
+import ir.noori.taskmanager.presentation.ui.tasklist.TaskViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -112,13 +112,13 @@ class MainActivity : AppCompatActivity() {
     private fun observer() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                splashViewModel.event.collect { events ->
+                splashViewModel.events.collect { events ->
                     when (events) {
-                        SplashEvents.NavigateToHome -> {
+                         is SplashViewModel.SplashEvent.NavigateToHome -> {
                             Toast.makeText(applicationContext, "navigate to home", Toast.LENGTH_SHORT).show()
                         }
 
-                        SplashEvents.NavigateToLogin -> {
+                        SplashViewModel.SplashEvent.NavigateToLogin -> {
                             Toast.makeText(applicationContext, "navigate to login", Toast.LENGTH_SHORT).show()
 
 //                            supportFragmentManager
@@ -127,6 +127,8 @@ class MainActivity : AppCompatActivity() {
 //                                .addToBackStack(null)
 //                                .commit()
                         }
+
+                        else -> {}
                     }
                 }
             }
