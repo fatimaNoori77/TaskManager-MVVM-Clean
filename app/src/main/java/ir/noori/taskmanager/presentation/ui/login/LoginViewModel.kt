@@ -1,4 +1,4 @@
-package ir.noori.taskmanager.presentation.viewmodel
+package ir.noori.taskmanager.presentation.ui.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

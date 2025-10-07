@@ -1,4 +1,4 @@
-package ir.noori.taskmanager.presentation.viewmodel
+package ir.noori.taskmanager.presentation.ui.tasklist
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -31,7 +31,7 @@ class TaskViewModel @Inject constructor(
 ) : ViewModel() {
 
     val tasks: StateFlow<List<Task>> = getTasksUseCase.invoke()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(2000), emptyList())
+        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(2000), emptyList())
 
     fun addTask(task: Task) {
         viewModelScope.launch {
