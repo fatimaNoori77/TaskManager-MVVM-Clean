@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.noori.taskmanager.domain.model.UserSession
 import ir.noori.taskmanager.domain.usecase.ObserveAuthSessionUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,17 +46,6 @@ class SplashViewModel @Inject constructor(
                     }
                 }
         }
-    }
-
-    sealed class SplashEvent {
-        object NavigateToLogin : SplashEvent()
-        data class NavigateToHome(val session: UserSession) : SplashEvent()
-    }
-
-    sealed class SplashUiState {
-        data object Loading : SplashUiState()
-        data object Unauthenticated : SplashUiState()
-        data class Authenticated(val session: UserSession) : SplashUiState()
     }
 
 }
