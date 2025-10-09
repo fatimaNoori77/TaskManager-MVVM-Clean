@@ -23,14 +23,14 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 splashViewModel.events.collect { event ->
                     when (event) {
-                        SplashViewModel.SplashEvent.NavigateToLogin -> {
+                        SplashEvent.NavigateToLogin -> {
                             nav.navigate(R.id.action_splashFragment_to_loginFragment) {
                                 popUpTo(R.id.splashFragment) {
                                     inclusive = true
                                 }
                             }
                         }
-                        is SplashViewModel.SplashEvent.NavigateToHome -> {
+                        is SplashEvent.NavigateToHome -> {
                             nav.navigate(R.id.action_splashFragment_to_taskListFragment) {
                                 popUpTo(R.id.splashFragment) {
                                     inclusive = true

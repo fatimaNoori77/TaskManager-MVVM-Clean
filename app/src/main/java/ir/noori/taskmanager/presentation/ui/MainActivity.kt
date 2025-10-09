@@ -32,6 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.noori.taskmanager.R
 import ir.noori.taskmanager.databinding.ActivityMainBinding
 import ir.noori.taskmanager.domain.model.Task
+import ir.noori.taskmanager.presentation.ui.splash.SplashEvent
 import ir.noori.taskmanager.presentation.ui.splash.SplashViewModel
 import ir.noori.taskmanager.presentation.ui.tasklist.TaskAdapter
 import ir.noori.taskmanager.presentation.ui.tasklist.TaskViewModel
@@ -114,11 +115,11 @@ class MainActivity : AppCompatActivity() {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 splashViewModel.events.collect { events ->
                     when (events) {
-                         is SplashViewModel.SplashEvent.NavigateToHome -> {
+                         is SplashEvent.NavigateToHome -> {
                             Toast.makeText(applicationContext, "navigate to home", Toast.LENGTH_SHORT).show()
                         }
 
-                        SplashViewModel.SplashEvent.NavigateToLogin -> {
+                        SplashEvent.NavigateToLogin -> {
                             Toast.makeText(applicationContext, "navigate to login", Toast.LENGTH_SHORT).show()
 
 //                            supportFragmentManager
