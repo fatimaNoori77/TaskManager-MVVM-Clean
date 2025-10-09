@@ -11,8 +11,6 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import ir.noori.taskmanager.databinding.FragmentLoginBinding
 import ir.noori.taskmanager.domain.model.LoginRequest
-import ir.noori.taskmanager.presentation.viewmodel.LoginState
-import ir.noori.taskmanager.presentation.viewmodel.LoginViewModel
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {

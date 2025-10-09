@@ -10,7 +10,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import ir.noori.taskmanager.R
 import ir.noori.taskmanager.core.constant.AppConstant
-import ir.noori.taskmanager.presentation.ui.tasklist.MainActivity
+import ir.noori.taskmanager.presentation.ui.MainActivity
 import java.util.Random
 
 

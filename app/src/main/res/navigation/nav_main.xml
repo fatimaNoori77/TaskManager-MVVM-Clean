@@ -47,6 +47,16 @@
         android:id="@+id/splashFragment"
         android:name="ir.noori.taskmanager.presentation.ui.splash.SplashFragment"
         android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" />
+        tools:layout="@layout/fragment_splash" >
+
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+
+        <action
+            android:id="@+id/action_splashFragment_to_taskListFragment"
+            app:destination="@id/taskListFragment" />
+
+    </fragment>
 
 </navigation>
