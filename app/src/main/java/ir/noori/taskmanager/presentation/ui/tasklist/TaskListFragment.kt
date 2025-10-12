@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -32,10 +33,10 @@ import java.util.Date
 import java.util.Locale
 
 @AndroidEntryPoint
-class TaskListFragment : Fragment(R.layout.fragment_task_list) {
+class TaskListFragment : Fragment() {
 
     private var _binding : FragmentTaskListBinding? = null
-    private val binding = _binding!!
+    private val binding get() = _binding!!
     private val taskViewModel: TaskViewModel by viewModels()
     private val taskAdapter = TaskAdapter(
         onCheckChanged = { task, _ ->
@@ -48,6 +49,15 @@ class TaskListFragment : Fragment(R.layout.fragment_task_list) {
             showTaskDialog(it)
         }
     )
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentTaskListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
