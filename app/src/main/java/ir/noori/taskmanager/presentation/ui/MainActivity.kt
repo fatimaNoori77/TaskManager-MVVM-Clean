@@ -10,15 +10,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import dagger.hilt.android.AndroidEntryPoint
 import ir.noori.taskmanager.R
 import ir.noori.taskmanager.databinding.ActivityMainBinding
 import ir.noori.taskmanager.presentation.ui.splash.SplashViewModel
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -32,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
-        val navController = navHostFragment.navController
 
         checkPostNotificationPermission()
         observer()
@@ -54,14 +49,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observer() {
-
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                splashViewModel.uiState.collect { state ->
-                    Toast.makeText(applicationContext, "ui state $state", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
 
 //        viewModel.isDarkMode.observe(this) { isDark ->
 //            AppCompatDelegate.setDefaultNightMode(

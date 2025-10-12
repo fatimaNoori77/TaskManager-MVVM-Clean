@@ -41,5 +41,18 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                splashViewModel.uiState.collect { state ->
+                  when(state){
+                      is SplashUiState.Authenticated -> TODO()
+                      SplashUiState.Loading -> TODO()
+                      SplashUiState.Unauthenticated -> TODO()
+                  }
+                }
+            }
+        }
+
     }
 }
