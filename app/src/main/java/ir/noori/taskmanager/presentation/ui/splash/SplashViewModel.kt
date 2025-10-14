@@ -24,8 +24,7 @@ class SplashViewModel @Inject constructor(
     private val _events = Channel<SplashEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    private val _uiState = MutableStateFlow<SplashUiState>(
-        SplashUiState.Loading)
+    private val _uiState = MutableStateFlow<SplashUiState>(SplashUiState.Loading)
     val uiState: StateFlow<SplashUiState> = _uiState.asStateFlow()
 
     init {

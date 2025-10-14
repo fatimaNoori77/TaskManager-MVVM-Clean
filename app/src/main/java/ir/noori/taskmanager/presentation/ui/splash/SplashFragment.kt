@@ -24,14 +24,14 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                 splashViewModel.events.collect { event ->
                     when (event) {
                         SplashEvent.NavigateToLogin -> {
-                            nav.navigate(R.id.action_splashFragment_to_loginFragment) {
+                            nav.navigate("login_fragment") {
                                 popUpTo(R.id.splashFragment) {
                                     inclusive = true
                                 }
                             }
                         }
                         is SplashEvent.NavigateToHome -> {
-                            nav.navigate(R.id.action_splashFragment_to_taskListFragment) {
+                            nav.navigate( "task_list_fragment") {
                                 popUpTo(R.id.splashFragment) {
                                     inclusive = true
                                 }
@@ -41,5 +41,18 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                splashViewModel.uiState.collect { state ->
+                  when(state){
+                      is SplashUiState.Authenticated ->{}
+                      SplashUiState.Loading ->{}
+                      SplashUiState.Unauthenticated ->{}
+                  }
+                }
+            }
+        }
+
     }
 }

@@ -9,37 +9,26 @@
         android:id="@+id/loginFragment"
         android:name="ir.noori.taskmanager.presentation.ui.login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login">
-
-    </fragment>
+        app:route="login_fragment"
+        tools:layout="@layout/fragment_login"/>
 
     <fragment
         android:id="@+id/profileFragment"
         android:name="ir.noori.taskmanager.presentation.ui.user.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
-
-        <action
-            android:id="@+id/action_profileFragment_to_taskListFragment"
-            app:destination="@id/taskListFragment" />
-
-    </fragment>
+        app:route="profile_fragment"
+        tools:layout="@layout/fragment_profile"/>
 
     <fragment
         android:id="@+id/taskListFragment"
         android:name="ir.noori.taskmanager.presentation.ui.tasklist.TaskListFragment"
         android:label="fragment_task_list"
-        tools:layout="@layout/fragment_task_list" >
-        <action
-            android:id="@+id/action_taskListFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
-        <action
-            android:id="@+id/action_taskListFragment_to_addTaskDialogFragment"
-            app:destination="@id/addTaskDialogFragment" />
-    </fragment>
+        app:route="task_list_fragment"
+        tools:layout="@layout/fragment_task_list" />
 
     <dialog
         android:id="@+id/addTaskDialogFragment"
+        app:route="add_task_dialog_fragment"
         android:name="ir.noori.taskmanager.presentation.ui.tasklist.AddTaskDialogFragment"
         android:label="AddTaskDialogFragment" />
 
@@ -47,16 +36,7 @@
         android:id="@+id/splashFragment"
         android:name="ir.noori.taskmanager.presentation.ui.splash.SplashFragment"
         android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" >
-
-        <action
-            android:id="@+id/action_splashFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-
-        <action
-            android:id="@+id/action_splashFragment_to_taskListFragment"
-            app:destination="@id/taskListFragment" />
-
-    </fragment>
+        app:route="splash_fragment"
+        tools:layout="@layout/fragment_splash"/>
 
 </navigation>

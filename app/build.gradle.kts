@@ -65,9 +65,8 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
 
-    // Lifecycle ViewModel + LiveData
+    // Lifecycle ViewModel
     implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.lifecycle.livedata.ktx)
 
     // Room
     implementation(libs.androidx.room.runtime.v271)
