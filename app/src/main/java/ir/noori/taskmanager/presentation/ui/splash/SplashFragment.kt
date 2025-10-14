@@ -46,9 +46,9 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 splashViewModel.uiState.collect { state ->
                   when(state){
-                      is SplashUiState.Authenticated -> TODO()
-                      SplashUiState.Loading -> TODO()
-                      SplashUiState.Unauthenticated -> TODO()
+                      is SplashUiState.Authenticated ->{}
+                      SplashUiState.Loading ->{}
+                      SplashUiState.Unauthenticated ->{}
                   }
                 }
             }
