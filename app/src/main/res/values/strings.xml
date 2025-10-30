@@ -5,4 +5,6 @@
     <string name="edit_task">Edit Task</string>
     <string name="add_task">Add Task</string>
     <string name="internet_warning">No Connection...</string>
+    <string name="no_internet_connection_error">خطای عدم اتصابل به اینترنت</string>
+    <string name="unknown_error">خطایی در دریافت اطلاعات پیش آمده...</string>
 </resources>

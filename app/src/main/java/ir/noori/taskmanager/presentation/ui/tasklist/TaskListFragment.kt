@@ -64,7 +64,7 @@ class TaskListFragment : Fragment() {
         _binding = FragmentTaskListBinding.bind(view)
 
         initViewBindings()
-
+        observers()
     }
 
     private fun initViewBindings() {
@@ -84,10 +84,33 @@ class TaskListFragment : Fragment() {
     private fun observers(){
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                taskViewModel.tasks.collectLatest { taskList ->
-                    binding.swipeRefreshLayout.isRefreshing = false
-                    taskAdapter.submitList(taskList)
+                taskViewModel.uiState.collect { state ->
+                    when (state) {
+                        is TaskUiState.Idle -> {}
+                        is TaskUiState.Loading -> {}
+
+                        is TaskUiState.Success -> {
+                            binding.swipeRefreshLayout.isRefreshing = false
+                        }
+
+                        is TaskUiState.Error -> {
+                            binding.swipeRefreshLayout.isRefreshing = false
+                            Toast.makeText(
+                                requireContext(),
+                                getString(state.messageRes),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
+            }
+        }
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                taskViewModel.tasks.collectLatest { taskList ->
+                binding.swipeRefreshLayout.isRefreshing = false
+                taskAdapter.submitList(taskList)
+            }
             }
         }
     }

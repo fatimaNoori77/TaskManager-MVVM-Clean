@@ -3,7 +3,9 @@ package ir.noori.taskmanager.data.repository
 import ir.noori.taskmanager.data.local.dao.TaskDao
 import ir.noori.taskmanager.data.mapper.toDomain
 import ir.noori.taskmanager.data.mapper.toEntity
+import ir.noori.taskmanager.data.network.NetworkChecker
 import ir.noori.taskmanager.data.remote.api.TaskApiService
+import ir.noori.taskmanager.data.util.safeApiCall
 import ir.noori.taskmanager.domain.model.Task
 import ir.noori.taskmanager.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +14,8 @@ import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(
     private val taskDao: TaskDao,
-    private val apiService: TaskApiService
+    private val apiService: TaskApiService,
+    private val networkChecker: NetworkChecker
 ) : TaskRepository {
 
     override fun getTasks(): Flow<List<Task>> {
@@ -20,7 +23,7 @@ class TaskRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchRemoteTasks() {
-        val remoteTasks = apiService.getTasks()
+        val remoteTasks = safeApiCall(networkChecker) { apiService.getTasks() }
         // for now, I just want to save the first 5 items
         taskDao.upsertTasks(remoteTasks.take(5).map { it.toEntity() })
     }

@@ -1,20 +1,23 @@
 package ir.noori.taskmanager.presentation.ui.tasklist
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.noori.taskmanager.R
 import ir.noori.taskmanager.data.alarm.AlarmScheduler
 import ir.noori.taskmanager.data.local.DataStore
+import ir.noori.taskmanager.domain.exceptions.NoInternetException
 import ir.noori.taskmanager.domain.model.Task
 import ir.noori.taskmanager.domain.usecase.AddTaskUseCase
 import ir.noori.taskmanager.domain.usecase.DeleteTaskUseCase
 import ir.noori.taskmanager.domain.usecase.GetTasksUseCase
 import ir.noori.taskmanager.domain.usecase.ToggleTaskStatusUseCase
 import ir.noori.taskmanager.domain.usecase.UpdateTaskUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -52,12 +55,20 @@ class TaskViewModel @Inject constructor(
         }
     }
 
+    private val _uiState = MutableStateFlow<TaskUiState>(TaskUiState.Idle)
+    val uiState = _uiState.asStateFlow()
+
     fun refreshTasks() {
         viewModelScope.launch {
+            _uiState.value = TaskUiState.Loading
             try {
-               getTasksUseCase.fetchFromRemote()
+                getTasksUseCase.fetchFromRemote()
+                _uiState.value = TaskUiState.Success
+            } catch (e: NoInternetException){
+                _uiState.value = TaskUiState.Error(R.string.no_internet_connection_error)
             } catch (e: Exception) {
-                Log.i("TAG", "refreshTasks: ${e.printStackTrace()}")
+                e.printStackTrace()
+                _uiState.value = TaskUiState.Error(R.string.unknown_error)
             }
         }
     }
@@ -74,4 +85,11 @@ class TaskViewModel @Inject constructor(
             themePreferences.toggleTheme(currentTheme)
         }
     }
+}
+
+sealed class TaskUiState{
+    object Idle: TaskUiState()
+    object Loading: TaskUiState()
+    object Success: TaskUiState()
+    data class Error(val messageRes: Int): TaskUiState()
 }
