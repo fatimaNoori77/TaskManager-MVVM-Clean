@@ -1,14 +1,15 @@
 package ir.noori.taskmanager.presentation.ui.login
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ir.noori.taskmanager.R
 import ir.noori.taskmanager.databinding.FragmentLoginBinding
 import ir.noori.taskmanager.domain.model.LoginRequest
 
@@ -61,13 +62,11 @@ class LoginFragment : Fragment() {
     }
 
     fun navigateToDirectionFragment() {
-        Log.i("TAG", "navigateToDirectionFragment: ")
-//        parentFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_container, ProfileFragment())
-//            .addToBackStack(null)
-//            .commit()
+        findNavController().navigate("task_list_fragment") {
+            popUpTo(R.id.loginFragment) {
+                inclusive = true
+            }
+        }
     }
-
 
 }
