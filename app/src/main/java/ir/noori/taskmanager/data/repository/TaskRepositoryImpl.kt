@@ -25,7 +25,7 @@ class TaskRepositoryImpl @Inject constructor(
     override suspend fun fetchRemoteTasks() {
         val remoteTasks = safeApiCall(networkChecker) { apiService.getTasks() }
         // for now, I just want to save the first 5 items
-        taskDao.upsertTasks(remoteTasks.take(5).map { it.toEntity() })
+        taskDao.upsertTasks(remoteTasks.map { it.toEntity() })
     }
 
     override suspend fun deleteTask(id: Int) {

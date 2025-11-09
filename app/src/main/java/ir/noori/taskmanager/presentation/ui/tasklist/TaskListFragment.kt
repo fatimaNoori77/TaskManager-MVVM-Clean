@@ -73,6 +73,10 @@ class TaskListFragment : Fragment() {
             taskViewModel.refreshTasks()
         }
 
+        binding.fabAddTask.setOnClickListener {
+            AddTaskDialogFragment().show(childFragmentManager, "AddTaskDialog")
+        }
+
     }
 
     private fun setupRecyclerView() {
