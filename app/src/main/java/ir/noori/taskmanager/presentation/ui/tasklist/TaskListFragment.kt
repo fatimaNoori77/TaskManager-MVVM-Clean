@@ -17,7 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -37,7 +37,7 @@ class TaskListFragment : Fragment() {
 
     private var _binding : FragmentTaskListBinding? = null
     private val binding get() = _binding!!
-    private val taskViewModel: TaskViewModel by viewModels()
+    private val taskViewModel: TaskViewModel by activityViewModels()
     private val taskAdapter = TaskAdapter(
         onCheckChanged = { task, _ ->
             taskViewModel.toggleTaskDone(task)
