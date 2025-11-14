@@ -7,6 +7,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import ir.noori.taskmanager.databinding.DialogAddTaskBinding
 import ir.noori.taskmanager.domain.model.Task
@@ -36,15 +38,35 @@ class AddTaskDialogFragment : DialogFragment() {
 
     private fun setupUi() {
         binding.editTextDeadline.setOnClickListener {
-            val picker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select deadline")
+            val datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select deadline date")
                 .build()
 
-            picker.addOnPositiveButtonClickListener { selectedDate ->
-                binding.editTextDeadline.setText(picker.headerText)
+            datePicker.addOnPositiveButtonClickListener { selectedDate ->
+                val dateText = datePicker.headerText
+
+                val timePicker = MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setHour(12)
+                    .setMinute(0)
+                    .setTitleText("Select deadline time")
+                    .build()
+
+                timePicker.addOnPositiveButtonClickListener {
+                    val hour = timePicker.hour
+                    val minute = timePicker.minute
+
+                    val formattedTime = String.format("%02d:%02d", hour, minute)
+                    val deadline = "$dateText $formattedTime"
+                    binding.editTextDeadline.setText(deadline)
+                }
+
+                timePicker.show(parentFragmentManager, "timePicker")
             }
-            picker.show(parentFragmentManager, "deadlinePicker")
+
+            datePicker.show(parentFragmentManager, "datePicker")
         }
+
         binding.cancelButton.setOnClickListener {
             dismiss()
         }
