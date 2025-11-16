@@ -26,7 +26,7 @@ class AlarmScheduler @Inject constructor(
         val reminderTime = task.dueDate
         val adjustedReminderTime = reminderTime - 5 * 60 * 1000 // 5 minutes before
 
-        if (adjustedReminderTime < System.currentTimeMillis()) {
+        if (reminderTime < System.currentTimeMillis()) {
             Log.w("AlarmScheduler", "Reminder time is in the past. Skipping.")
             return
         }
@@ -51,11 +51,13 @@ class AlarmScheduler @Inject constructor(
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (!manager.canScheduleExactAlarms()) {
+            val permission = alarmManager.canScheduleExactAlarms()
+            if (!permission) {
                 Log.w("AlarmScheduler", "Exact alarms not permitted by user.")
                 return
             }
         }
+
 
         manager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,

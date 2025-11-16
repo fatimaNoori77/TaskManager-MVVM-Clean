@@ -11,7 +11,7 @@ fun TaskEntity.toDomain(): Task {
         description = description,
         isDone = isDone,
         dueDate = dueDate,
-        reminderTime = reminderTime
+        hasReminder = reminderTime
     )
 }
 
@@ -22,7 +22,7 @@ fun Task.toEntity(): TaskEntity {
         description = description ?: "",
         isDone = isDone,
         dueDate = dueDate,
-        reminderTime = reminderTime
+        reminderTime = hasReminder
     )
 }
 
@@ -33,7 +33,7 @@ fun TaskDto.toDomain(): Task {
         description = "",
         isDone = isDone,
         dueDate = 0L,
-        reminderTime = false
+        hasReminder = false
     )
 }
 

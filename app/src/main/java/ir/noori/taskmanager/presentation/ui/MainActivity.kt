@@ -1,9 +1,14 @@
 package ir.noori.taskmanager.presentation.ui
 
 import android.Manifest
+import android.app.AlarmManager
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
 
         checkPostNotificationPermission()
+        askExactAlarmPermission()
     }
 
     private fun checkPostNotificationPermission() {
@@ -40,5 +46,26 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun askExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = getSystemService(AlarmManager::class.java)
+
+            if (!alarmManager.canScheduleExactAlarms()) {
+                AlertDialog.Builder(this)
+                    .setTitle("Allow exact alarms")
+                    .setMessage("To remind you about tasks on time, the app needs permission to schedule exact alarms.")
+                    .setPositiveButton("Allow") { _, _ ->
+                        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                            data = Uri.parse("package:$packageName")
+                        }
+                        startActivity(intent)
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
+        }
+    }
+
 
 }

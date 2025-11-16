@@ -173,7 +173,7 @@ class TaskListFragment : Fragment() {
                     description = description,
                     dueDate = selectedDeadline ?: 0,
                     isDone = false,
-                    reminderTime = wantsReminder
+                    hasReminder = wantsReminder
                 )
 
                 if (task == null) {
