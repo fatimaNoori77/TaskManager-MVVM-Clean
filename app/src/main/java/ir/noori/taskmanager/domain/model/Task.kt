@@ -6,5 +6,5 @@ data class Task(
     val description: String?,
     var dueDate: Long =0,
     var isDone: Boolean = false,
-    var reminderTime: Boolean = false
+    var hasReminder: Boolean = false
 )

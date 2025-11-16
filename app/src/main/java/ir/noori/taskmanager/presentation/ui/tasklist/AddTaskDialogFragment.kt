@@ -97,7 +97,7 @@ class AddTaskDialogFragment : DialogFragment() {
                 return@setOnClickListener
             }
 
-            viewModel.addTask(Task(title = title, description = description, dueDate = selectedDeadlineMillis, reminderTime = reminder))
+            viewModel.addTask(Task(title = title, description = description, dueDate = selectedDeadlineMillis, hasReminder = reminder))
             Toast.makeText(requireContext(), "Task added", Toast.LENGTH_SHORT).show()
             dismiss()
         }

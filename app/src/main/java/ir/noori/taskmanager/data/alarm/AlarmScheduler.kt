@@ -1,84 +1,79 @@
-package ir.noori.taskmanager.data.alarm;
+package ir.noori.taskmanager.data.alarm
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.provider.Settings;
-import android.util.Log;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import dagger.hilt.android.qualifiers.ApplicationContext;
-import ir.noori.taskmanager.core.constant.AppConstant;
-import ir.noori.taskmanager.domain.model.Task;
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.util.Log
+import dagger.hilt.android.qualifiers.ApplicationContext
+import ir.noori.taskmanager.core.constant.AppConstant
+import ir.noori.taskmanager.domain.model.Task
+import javax.inject.Inject
+import javax.inject.Singleton
+
 
 @Singleton
-public class AlarmScheduler {
+class AlarmScheduler @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
+    private val alarmManager: AlarmManager? =
+        context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
-    private final Context context;
-    private final AlarmManager alarmManager;
+    fun schedule(task: Task) {
+        if (!task.hasReminder) return
 
-    @Inject
-    public AlarmScheduler(@ApplicationContext Context context) {
-        this.context = context;
-        this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    }
+        val reminderTime = task.dueDate
+        val adjustedReminderTime = reminderTime - 5 * 60 * 1000 // 5 minutes before
 
-    public void schedule(Task task) {
-        if (!task.getReminderTime()) return;
+        if (adjustedReminderTime < System.currentTimeMillis()) {
+            Log.w("AlarmScheduler", "Reminder time is in the past. Skipping.")
+            return
+        }
 
-        long reminderTime = task.getDueDate();
-        long adjustedReminderTime = reminderTime - 5 * 60 * 1000;
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            putExtra(AppConstant.EXTRA_TITLE, task.title)
+            putExtra(AppConstant.EXTRA_DESCRIPTION, task.description ?: "")
+            putExtra(AppConstant.EXTRA_TASK_ID, task.id)
+        }
 
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        intent.putExtra(AppConstant.EXTRA_TITLE, task.getTitle());
-        intent.putExtra(AppConstant.EXTRA_DESCRIPTION, task.getDescription() != null ? task.getDescription() : "");
-        intent.putExtra(AppConstant.EXTRA_TASK_ID, task.getId());
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            task.id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                context,
-                task.getId(),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
-
-        if (alarmManager == null) {
-            Log.w("AlarmScheduler", "AlarmManager is null");
-            return;
+        val manager = alarmManager
+        if (manager == null) {
+            Log.w("AlarmScheduler", "AlarmManager is null")
+            return
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (alarmManager.canScheduleExactAlarms()) {
-                alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        adjustedReminderTime,
-                        pendingIntent
-                );
-            } else {
-                Intent permissionIntent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
-                permissionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(permissionIntent);
+            if (!manager.canScheduleExactAlarms()) {
+                Log.w("AlarmScheduler", "Exact alarms not permitted by user.")
+                return
             }
-        } else {
-            alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    adjustedReminderTime,
-                    pendingIntent
-            );
         }
+
+        manager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            adjustedReminderTime,
+            pendingIntent
+        )
     }
 
-    public void cancel(Task task) {
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                context,
-                task.getId(),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
-        if (alarmManager != null) {
-            alarmManager.cancel(pendingIntent);
-        }
+    fun cancel(task: Task) {
+        val intent = Intent(context, AlarmReceiver::class.java)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            task.id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        alarmManager?.cancel(pendingIntent)
     }
 }
