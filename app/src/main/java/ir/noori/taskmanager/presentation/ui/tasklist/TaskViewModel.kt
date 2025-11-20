@@ -39,6 +39,7 @@ class TaskViewModel @Inject constructor(
     fun addTask(task: Task) {
         viewModelScope.launch {
             addTaskUseCase(task)
+            if(!task.hasReminder) return@launch
             alarmScheduler.schedule(task)
         }
     }

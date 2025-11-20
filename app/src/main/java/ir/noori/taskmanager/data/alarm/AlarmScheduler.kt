@@ -21,11 +21,7 @@ class AlarmScheduler @Inject constructor(
         context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
     fun schedule(task: Task) {
-        if (!task.hasReminder) return
-
         val reminderTime = task.dueDate
-        val adjustedReminderTime = reminderTime - 5 * 60 * 1000 // 5 minutes before
-
         if (reminderTime < System.currentTimeMillis()) {
             Log.w("AlarmScheduler", "Reminder time is in the past. Skipping.")
             return
@@ -58,10 +54,9 @@ class AlarmScheduler @Inject constructor(
             }
         }
 
-
         manager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            adjustedReminderTime,
+            reminderTime,
             pendingIntent
         )
     }
