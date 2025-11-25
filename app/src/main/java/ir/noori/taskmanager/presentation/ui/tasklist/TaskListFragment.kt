@@ -38,17 +38,19 @@ class TaskListFragment : Fragment() {
     private var _binding : FragmentTaskListBinding? = null
     private val binding get() = _binding!!
     private val taskViewModel: TaskViewModel by viewModels()
-    private val taskAdapter = TaskAdapter(
-        onCheckChanged = { task, _ ->
-            taskViewModel.toggleTaskDone(task)
-        },
-        onDeleteClicked = { task ->
-            taskViewModel.deleteTask(task.id)
-        },
-        onTaskClicked = {
-            showTaskDialog(it)
-        }
-    )
+    private val taskAdapter by lazy {
+        TaskAdapter(
+            onCheckChanged = { task, _ ->
+                taskViewModel.toggleTaskDone(task)
+            },
+            onDeleteClicked = { task ->
+                taskViewModel.deleteTask(task.id)
+            },
+            onTaskClicked = {
+                showTaskDialog(it)
+            }
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
